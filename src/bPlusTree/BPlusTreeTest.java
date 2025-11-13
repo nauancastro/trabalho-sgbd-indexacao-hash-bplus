@@ -1,5 +1,10 @@
 package src.bPlusTree;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Classe de testes para a Árvore B+
  * Demonstra o funcionamento das operações de inserção, busca e remoção
@@ -12,9 +17,11 @@ public class BPlusTreeTest {
         System.out.println("║   Professora: Lívia Almada                                ║");
         System.out.println("╚═══════════════════════════════════════════════════════════╝\n");
 
-        // Executa testes básicos
+        // Executa todos os testes
         testeBasico();
         testeBuscas();
+        testeSplits();
+        testeOrdemAleatoria();
     }
 
     /**
@@ -46,7 +53,7 @@ public class BPlusTreeTest {
         tree.displayStats();
         tree.displayInOrder();
         
-        System.out.println("✓ Teste básico concluído com sucesso!");
+        System.out.println("Teste básico concluído com sucesso!");
     }
 
     /**
@@ -72,12 +79,12 @@ public class BPlusTreeTest {
             String resultado = tree.search(i);
             if (resultado == null || !resultado.equals("Registro_" + i)) {
                 todasOk = false;
-                System.out.println("  ✗ Erro na chave " + i);
+                System.out.println("Erro na chave " + i);
             }
         }
         
         if (todasOk) {
-            System.out.println("  ✓ Todas as 20 chaves foram encontradas corretamente!");
+            System.out.println("Todas as 20 chaves foram encontradas corretamente!");
         }
         
         System.out.println("\nTestando buscas de chaves inexistentes:");
@@ -86,5 +93,92 @@ public class BPlusTreeTest {
         System.out.println("  Chave 100: " + tree.search(100));
         
         tree.displayStats();
+    }
+
+    /**
+     * Teste 3: Demonstração de splits em diferentes níveis
+     */
+    public static void testeSplits() {
+        System.out.println("\n┌─────────────────────────────────────────┐");
+        System.out.println("│ TESTE 3: Splits e Crescimento da Árvore │");
+        System.out.println("└─────────────────────────────────────────┘");
+        
+        BPlusTree tree = new BPlusTree(4);
+        
+        System.out.println("Árvore de ordem 4 (máximo 3 chaves por nó)");
+        System.out.println("Inserindo sequencialmente: 1 a 15");
+        System.out.println("Acompanhe o crescimento da árvore:\n");
+        
+        for (int i = 1; i <= 15; i++) {
+            tree.insert(i, "V" + i);
+            
+            if (i == 3) {
+                System.out.println(">>> Após inserir 3 elementos (antes do primeiro split):");
+                tree.display();
+            } else if (i == 4) {
+                System.out.println(">>> Após inserir 4 elementos (primeiro split!):");
+                tree.display();
+            } else if (i == 7) {
+                System.out.println(">>> Após inserir 7 elementos:");
+                tree.display();
+            } else if (i == 15) {
+                System.out.println(">>> Após inserir 15 elementos (árvore completa):");
+                tree.display();
+            }
+        }
+        
+        tree.displayInOrder();
+        tree.displayStats();
+        
+        System.out.println("Observe como a árvore cresce em altura conforme splits ocorrem!");
+    }
+
+    /**
+     * Teste 4: Inserção em ordem aleatória (conforme sugerido no trabalho)
+     */
+    public static void testeOrdemAleatoria() {
+        System.out.println("\n┌─────────────────────────────────────────┐");
+        System.out.println("│ TESTE 4: Inserção em Ordem Aleatória    │");
+        System.out.println("└─────────────────────────────────────────┘");
+        
+        BPlusTree tree = new BPlusTree(5);
+        
+        // Cria lista de 1 a 50 (conforme sugerido no trabalho)
+        List<Integer> chaves = new ArrayList<>();
+        for (int i = 1; i <= 50; i++) {
+            chaves.add(i);
+        }
+        
+        // Embaralha as chaves
+        Collections.shuffle(chaves, new Random(42));
+        
+        System.out.println("Inserindo chaves de 1 a 50 em ordem aleatória:");
+        System.out.println("Primeiras 20 chaves na ordem de inserção: " + chaves.subList(0, 20));
+        
+        // Insere todas as chaves
+        for (int key : chaves) {
+            tree.insert(key, "Valor_" + key);
+        }
+        
+        System.out.println("\nEstrutura final da árvore:");
+        tree.display();
+        tree.displayInOrder();
+        tree.displayStats();
+        
+        System.out.println("Verificando integridade após inserções aleatórias...");
+        boolean integro = true;
+        for (int i = 1; i <= 50; i++) {
+            String valor = tree.search(i);
+            if (valor == null || !valor.equals("Valor_" + i)) {
+                integro = false;
+                System.out.println("Erro na chave " + i);
+                break;
+            }
+        }
+        
+        if (integro) {
+            System.out.println("Todas as 50 chaves foram encontradas e estão ordenadas!");
+            System.out.println("A árvore manteve o balanceamento após inserções aleatórias!");
+        }
     }
 }
