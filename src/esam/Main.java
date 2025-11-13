@@ -11,8 +11,13 @@ public class Main {
         System.out.println("===========================================\n");
 
         System.out.print("Digite a capacidade por página (recomendado: 3-6): ");
-        int capacidade = scanner.nextInt();
-        scanner.nextLine();
+        int capacidade;
+        try {
+            capacidade = Integer.parseInt(scanner.nextLine().trim());
+        } catch (Exception e) {
+            System.out.println("Entrada inválida. Usando capacidade padrão: 4");
+            capacidade = 4;
+        }
 
         ESAM esam = new ESAM(capacidade);
         System.out.println("\nESAM criada com capacidade " + capacidade + " por página.");
@@ -26,14 +31,24 @@ public class Main {
             System.out.println("0. Sair");
             System.out.print("\nEscolha uma operação: ");
 
-            int op = scanner.nextInt();
-            scanner.nextLine();
+            int op;
+            try {
+                op = Integer.parseInt(scanner.nextLine().trim());
+            } catch (Exception e) {
+                System.out.println("Opção inválida!");
+                continue;
+            }
 
             switch (op) {
                 case 1:
                     System.out.print("Digite a chave (inteiro): ");
-                    int chave = scanner.nextInt();
-                    scanner.nextLine();
+                    Integer chave;
+                    try {
+                        chave = Integer.parseInt(scanner.nextLine().trim());
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Informe um inteiro.");
+                        break;
+                    }
                     System.out.print("Digite o valor (string): ");
                     String valor = scanner.nextLine();
                     boolean ok = esam.inserir(chave, valor);
@@ -46,8 +61,13 @@ public class Main {
 
                 case 2:
                     System.out.print("Digite a chave a buscar: ");
-                    int cBusca = scanner.nextInt();
-                    scanner.nextLine();
+                    Integer cBusca;
+                    try {
+                        cBusca = Integer.parseInt(scanner.nextLine().trim());
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Informe um inteiro.");
+                        break;
+                    }
                     String res = esam.buscar(cBusca);
                     if (res != null) {
                         System.out.println("Encontrado: " + res);
@@ -58,8 +78,13 @@ public class Main {
 
                 case 3:
                     System.out.print("Digite a chave a remover: ");
-                    int cRem = scanner.nextInt();
-                    scanner.nextLine();
+                    Integer cRem;
+                    try {
+                        cRem = Integer.parseInt(scanner.nextLine().trim());
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Informe um inteiro.");
+                        break;
+                    }
                     boolean removed = esam.remover(cRem);
                     if (removed) {
                         System.out.println("Chave removida");
