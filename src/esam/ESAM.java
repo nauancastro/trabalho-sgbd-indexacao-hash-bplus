@@ -35,8 +35,19 @@ public class ESAM {
         boolean ok = pagina.inserir(chave, valor);
         if (ok) {
             atualizarIndice();
+            return true;
         }
-        return ok;
+
+        // página cheia: realiza split e tenta novamente
+        splitPagina(pagina);
+
+        Pagina destino = indice.localizarPagina(chave);
+        if (destino == null) destino = paginas.get(0);
+        boolean ok2 = destino.inserir(chave, valor);
+        if (ok2) {
+            atualizarIndice();
+        }
+        return ok2;
     }
 
     /**
@@ -67,6 +78,35 @@ public class ESAM {
      */
     private void atualizarIndice() {
         indice.construir(paginas);
+    }
+
+    /**
+     * Divide a página cheia em duas novas páginas e atualiza a lista e o índice.
+     * Estratégia: particiona os registros ao meio mantendo ordenação.
+     */
+    private void splitPagina(Pagina paginaCheia) {
+        int pos = paginas.indexOf(paginaCheia);
+        if (pos < 0) return; // página não encontrada (defensivo)
+
+        List<Registro> regs = paginaCheia.getRegistros();
+        int mid = regs.size() / 2;
+
+        Pagina pEsq = new Pagina(capacidadePagina);
+        Pagina pDir = new Pagina(capacidadePagina);
+
+        for (int i = 0; i < mid; i++) {
+            Registro r = regs.get(i);
+            pEsq.inserir(r.getChave(), r.getValor());
+        }
+        for (int i = mid; i < regs.size(); i++) {
+            Registro r = regs.get(i);
+            pDir.inserir(r.getChave(), r.getValor());
+        }
+
+        paginas.remove(pos);
+        paginas.add(pos, pEsq);
+        paginas.add(pos + 1, pDir);
+        atualizarIndice();
     }
 
     /**
