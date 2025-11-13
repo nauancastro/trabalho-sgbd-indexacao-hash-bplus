@@ -5,6 +5,7 @@ Projeto da disciplina de **Construção de Sistemas de Gerência de Bancos de Da
 
 Implementação em Java de estruturas de indexação utilizadas em SGBDs:
 - **Hash Extensível** ✅ (Implementado)
+- **ESAM (Estrutura Sequencial com Índice Esparso)** ✅ (Implementado)
 - **Árvore B+** 🚧 (Em desenvolvimento)
 
 ## 🎯 Objetivo
@@ -24,6 +25,12 @@ trabalho-sgbd-indexacao-hash-bplus/
 │   │   ├── Bucket.java          # Classe que representa um bucket
 │   │   ├── ExtendibleHash.java  # Implementação do Hash Extensível
 │   │   └── Main.java            # Programa de demonstração e testes
+│   ├── esam/
+│   │   ├── Registro.java        # Registro chave-valor, ordenável por chave
+│   │   ├── Pagina.java          # Página ordenada com capacidade fixa
+│   │   ├── IndiceEsparso.java   # Índice esparso (1 nível) para localizar páginas
+│   │   ├── ESAM.java            # Estrutura principal (orquestra páginas e índice)
+│   │   └── Main.java            # Programa de demonstração (menu interativo)
 │   └── bplus/                   # (A ser implementado)
 ├── README.md
 └── LICENSE
@@ -178,6 +185,59 @@ Conforme especificação do trabalho, recomenda-se testar com:
 2. Tenta fazer merge se possível (reduz profundidade global)
 
 ---
+
+## 🔨 ESAM (Estrutura Sequencial com Índice Esparso)
+
+### Características da Implementação
+- Páginas ordenadas por chave com capacidade fixa.
+- Índice esparso (1 nível) mapeando a menor chave da página para sua posição.
+- Split de página ao overflow (partição por meio, mantendo ordenação).
+- Busca em duas etapas: índice → página → busca binária.
+
+### Classes Principais
+- `Registro.java`: par chave-valor com ordenação por chave.
+- `Pagina.java`: mantém registros ordenados; inserir, buscar, remover, capacidade.
+- `IndiceEsparso.java`: estrutura auxiliar para localizar páginas rapidamente.
+- `ESAM.java`: coordena páginas e índice; operações públicas de inserir/buscar/remover/exibir.
+- `Main.java`: menu interativo para demonstração.
+
+### Como Compilar e Executar (ESAM)
+
+```bash
+# Windows (PowerShell)
+javac -d bin src/esam/*.java
+java -cp bin esam.Main
+
+# Linux/Mac
+javac -d bin src/esam/*.java
+java -cp bin esam.Main
+```
+
+### Exemplo de Uso (programático)
+
+```java
+import esam.ESAM;
+
+public class ExemploEsam {
+    public static void main(String[] args) {
+        ESAM esam = new ESAM(4); // capacidade por página
+
+        esam.inserir(23, "cccc");
+        esam.inserir(5, "aaa");
+        esam.inserir(10, "bbb");
+
+        esam.exibir();           // mostra páginas e índice
+        System.out.println(esam.buscar(5)); // "aaa"
+        esam.remover(10);
+        esam.exibir();
+    }
+}
+```
+
+### Estado Atual
+- Split de página: implementado.
+- Merge/fusão de páginas: em desenvolvimento.
+- Validações de entrada na `Main`: implementadas (evita exceções em entradas inválidas).
 
 ## 👥 Equipe
 - Nauan Castro
