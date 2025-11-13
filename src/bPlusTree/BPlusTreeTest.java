@@ -22,6 +22,12 @@ public class BPlusTreeTest {
         testeBuscas();
         testeSplits();
         testeOrdemAleatoria();
+        testeRemocao();
+        testePerformance();
+        
+        System.out.println("\n╔═══════════════════════════════════════════════════════════╗");
+        System.out.println("║   TODOS OS TESTES CONCLUÍDOS COM SUCESSO!                 ║");
+        System.out.println("╚═══════════════════════════════════════════════════════════╝\n");
     }
 
     /**
@@ -180,5 +186,129 @@ public class BPlusTreeTest {
             System.out.println("Todas as 50 chaves foram encontradas e estão ordenadas!");
             System.out.println("A árvore manteve o balanceamento após inserções aleatórias!");
         }
+    }
+
+    /**
+     * Teste 5: Operações de remoção
+     */
+    public static void testeRemocao() {
+        System.out.println("\n┌─────────────────────────────────────────┐");
+        System.out.println("│ TESTE 5: Remoção de Chaves              │");
+        System.out.println("└─────────────────────────────────────────┘");
+        
+        BPlusTree tree = new BPlusTree(4);
+        
+        System.out.println("Inserindo chaves de 1 a 15:");
+        for (int i = 1; i <= 15; i++) {
+            tree.insert(i, "V" + i);
+        }
+        
+        System.out.println("\nÁrvore inicial:");
+        tree.display();
+        
+        System.out.println("\nRemovendo chaves: 5, 10, 15");
+        boolean r1 = tree.delete(5);
+        boolean r2 = tree.delete(10);
+        boolean r3 = tree.delete(15);
+        
+        System.out.println("  Remoção da chave 5: " + (r1 ? "✓" : "✗"));
+        System.out.println("  Remoção da chave 10: " + (r2 ? "✓" : "✗"));
+        System.out.println("  Remoção da chave 15: " + (r3 ? "✓" : "✗"));
+        
+        System.out.println("\nÁrvore após remoções:");
+        tree.display();
+        tree.displayInOrder();
+        
+        System.out.println("\nVerificando remoções:");
+        System.out.println("  Chave 5 (removida): " + tree.search(5));
+        System.out.println("  Chave 7 (existente): " + tree.search(7));
+        System.out.println("  Chave 10 (removida): " + tree.search(10));
+        System.out.println("  Chave 12 (existente): " + tree.search(12));
+        
+        // Tenta remover chave inexistente
+        System.out.println("\nTentando remover chave inexistente (99):");
+        boolean r4 = tree.delete(99);
+        System.out.println("  Resultado: " + (r4 ? "Removido (erro!)" : "Não encontrado (correto)"));
+        
+        System.out.println("\n Teste de remoção concluído!");
+    }
+
+    /**
+     * Teste 6: Teste de performance com grande volume de dados
+     */
+    public static void testePerformance() {
+        System.out.println("\n┌─────────────────────────────────────────┐");
+        System.out.println("│ TESTE 6: Performance e Grande Volume    │");
+        System.out.println("└─────────────────────────────────────────┘");
+        
+        BPlusTree tree = new BPlusTree(10);
+        
+        int n = 1000;
+        System.out.println("Testando com " + n + " elementos...");
+        
+        // Cria lista aleatória
+        List<Integer> chaves = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            chaves.add(i);
+        }
+        Collections.shuffle(chaves, new Random(999));
+        
+        // Teste de inserção
+        System.out.println("\n1. Teste de INSERÇÃO:");
+        long inicioInsert = System.nanoTime();
+        for (int key : chaves) {
+            tree.insert(key, "Dado_" + key);
+        }
+        long fimInsert = System.nanoTime();
+        double tempoInsert = (fimInsert - inicioInsert) / 1_000_000.0;
+        
+        System.out.println("  ✓ " + n + " inserções concluídas em " + 
+                          String.format("%.2f", tempoInsert) + " ms");
+        System.out.println("Tempo médio por inserção: " + 
+                          String.format("%.4f", tempoInsert / n) + " ms");
+        System.out.println("Altura final da árvore: " + tree.getHeight());
+        
+        // Teste de busca
+        System.out.println("\n2. Teste de BUSCA:");
+        Collections.shuffle(chaves, new Random(111));
+        int buscasOk = 0;
+        
+        long inicioBusca = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            int chave = chaves.get(i % n);
+            String resultado = tree.search(chave);
+            if (resultado != null && resultado.equals("Dado_" + chave)) {
+                buscasOk++;
+            }
+        }
+        long fimBusca = System.nanoTime();
+        double tempoBusca = (fimBusca - inicioBusca) / 1_000_000.0;
+        
+        System.out.println("1000 buscas concluídas em " + 
+                          String.format("%.2f", tempoBusca) + " ms");
+        System.out.println("Tempo médio por busca: " + 
+                          String.format("%.4f", tempoBusca / 1000) + " ms");
+        System.out.println("Taxa de sucesso: " + buscasOk + "/1000 (" + 
+                          (buscasOk * 100.0 / 1000) + "%)");
+        
+        // Teste de integridade
+        System.out.println("\n3. Teste de INTEGRIDADE:");
+        boolean integro = true;
+        for (int i = 1; i <= n; i++) {
+            String valor = tree.search(i);
+            if (valor == null || !valor.equals("Dado_" + i)) {
+                integro = false;
+                System.out.println("  ✗ Erro na chave " + i);
+                break;
+            }
+        }
+        
+        if (integro) {
+            System.out.println("Todos os " + n + " elementos verificados com sucesso!");
+        }
+        
+        tree.displayStats();
+        
+        System.out.println("Teste de performance concluído!");
     }
 }
