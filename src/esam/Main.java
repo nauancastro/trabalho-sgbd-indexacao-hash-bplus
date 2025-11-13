@@ -38,9 +38,9 @@ public class Main {
                     String valor = scanner.nextLine();
                     boolean ok = esam.inserir(chave, valor);
                     if (ok) {
-                        System.out.println("✓ Inserido: (" + chave + ", " + valor + ")");
+                        System.out.println("Inserido: (" + chave + ", " + valor + ")");
                     } else {
-                        System.out.println("✗ Falha na inserção (verifique capacidade/estado)");
+                        System.out.println("Falha na inserção (verifique capacidade/estado)");
                     }
                     break;
 
@@ -50,9 +50,9 @@ public class Main {
                     scanner.nextLine();
                     String res = esam.buscar(cBusca);
                     if (res != null) {
-                        System.out.println("✓ Encontrado: " + res);
+                        System.out.println("Encontrado: " + res);
                     } else {
-                        System.out.println("✗ Chave não encontrada");
+                        System.out.println("Chave não encontrada");
                     }
                     break;
 
@@ -62,9 +62,9 @@ public class Main {
                     scanner.nextLine();
                     boolean removed = esam.remover(cRem);
                     if (removed) {
-                        System.out.println("✓ Chave removida");
+                        System.out.println("Chave removida");
                     } else {
-                        System.out.println("✗ Chave não encontrada");
+                        System.out.println("Chave não encontrada");
                     }
                     break;
 

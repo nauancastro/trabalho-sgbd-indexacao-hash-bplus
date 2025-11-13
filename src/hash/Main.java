@@ -121,7 +121,7 @@ public class Main {
                     System.out.print("Digite o valor (string): ");
                     String value = scanner.nextLine();
                     hash.insert(key, value);
-                    System.out.println("✓ Inserido: (" + key + ", " + value + ")");
+                    System.out.println("Inserido: (" + key + ", " + value + ")");
                     break;
                     
                 case 2:
@@ -130,9 +130,9 @@ public class Main {
                     scanner.nextLine();
                     String result = hash.search(searchKey);
                     if (result != null) {
-                        System.out.println("✓ Encontrado: " + result);
+                        System.out.println("Encontrado: " + result);
                     } else {
-                        System.out.println("✗ Chave não encontrada");
+                        System.out.println("Chave não encontrada");
                     }
                     break;
                     
@@ -142,9 +142,9 @@ public class Main {
                     scanner.nextLine();
                     boolean removed = hash.remove(removeKey);
                     if (removed) {
-                        System.out.println("✓ Chave removida com sucesso");
+                        System.out.println("Chave removida com sucesso");
                     } else {
-                        System.out.println("✗ Chave não encontrada");
+                        System.out.println("Chave não encontrada");
                     }
                     break;
                     
@@ -213,7 +213,7 @@ public class Main {
                 int removeKey = random.nextInt(100);
                 boolean removed = hash.remove(removeKey);
                 System.out.println("Remover [" + removeKey + "]: " + 
-                    (removed ? "✓ Removido" : "✗ Não encontrado"));
+                    (removed ? "Removido" : "Não encontrado"));
             }
             
             System.out.println("\nRemoções concluídas!");

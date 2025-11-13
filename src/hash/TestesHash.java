@@ -42,9 +42,9 @@ public class TestesHash {
         assert hash.search(2).equals("Bob") : "Falha ao buscar chave 2";
         assert hash.search(3).equals("Carol") : "Falha ao buscar chave 3";
         
-        System.out.println("✓ Inserções bem-sucedidas");
-        System.out.println("✓ Buscas bem-sucedidas");
-        System.out.println("✓ Profundidade Global: " + hash.getGlobalDepth());
+        System.out.println("Inserções bem-sucedidas");
+        System.out.println("Buscas bem-sucedidas");
+        System.out.println("Profundidade Global: " + hash.getGlobalDepth());
         
         hash.display();
     }
@@ -64,16 +64,16 @@ public class TestesHash {
         hash.insert(2, "dois");
         hash.insert(3, "tres"); // Causa o primeiro split
         
-        System.out.println("✓ Split executado");
-        System.out.println("✓ Nova profundidade global: " + hash.getGlobalDepth());
-        System.out.println("✓ Número de buckets: " + hash.getNumberOfBuckets());
+        System.out.println("Split executado");
+        System.out.println("Nova profundidade global: " + hash.getGlobalDepth());
+        System.out.println("Número de buckets: " + hash.getNumberOfBuckets());
         
         // Verifica que todas as chaves ainda são acessíveis
         assert hash.search(1).equals("um");
         assert hash.search(2).equals("dois");
         assert hash.search(3).equals("tres");
         
-        System.out.println("✓ Todas as chaves acessíveis após split");
+        System.out.println("Todas as chaves acessíveis após split");
         
         hash.display();
     }
@@ -98,8 +98,8 @@ public class TestesHash {
                 hash.getGlobalDepth() + ", Buckets: " + hash.getNumberOfBuckets());
         }
         
-        System.out.println("\n✓ Profundidade final: " + hash.getGlobalDepth());
-        System.out.println("✓ Buckets criados: " + hash.getNumberOfBuckets());
+        System.out.println("\nProfundidade final: " + hash.getGlobalDepth());
+        System.out.println("Buckets criados: " + hash.getNumberOfBuckets());
         
         // Verifica integridade
         int encontrados = 0;
@@ -110,7 +110,7 @@ public class TestesHash {
         }
         
         assert encontrados == chaves.length : "Algumas chaves foram perdidas!";
-        System.out.println("✓ Todas as " + encontrados + " chaves encontradas");
+        System.out.println("Todas as " + encontrados + " chaves encontradas");
         
         hash.display();
     }
@@ -133,13 +133,13 @@ public class TestesHash {
         assert hash.search(10).equals("dez");
         assert hash.search(20).equals("vinte");
         assert hash.search(30).equals("trinta");
-        System.out.println("✓ Buscas de chaves existentes: OK");
+        System.out.println("Buscas de chaves existentes: OK");
         
         // Buscas sem sucesso
         assert hash.search(5) == null;
         assert hash.search(15) == null;
         assert hash.search(100) == null;
-        System.out.println("✓ Buscas de chaves inexistentes: OK (retornam null)");
+        System.out.println("Buscas de chaves inexistentes: OK (retornam null)");
     }
     
     /**
@@ -171,17 +171,17 @@ public class TestesHash {
         assert hash.search(3) == null;
         assert hash.search(5) == null;
         assert hash.search(7) == null;
-        System.out.println("✓ Chaves removidas com sucesso");
+        System.out.println("Chaves removidas com sucesso");
         
         // Verifica que outras chaves permanecem
         assert hash.search(1) != null;
         assert hash.search(2) != null;
         assert hash.search(4) != null;
-        System.out.println("✓ Outras chaves permanecem intactas");
+        System.out.println("Outras chaves permanecem intactas");
         
         // Tenta remover chave inexistente
         assert hash.remove(99) == false;
-        System.out.println("✓ Remoção de chave inexistente retorna false");
+        System.out.println("Remoção de chave inexistente retorna false");
         
         hash.display();
     }
@@ -204,7 +204,7 @@ public class TestesHash {
         System.out.println("Valor atualizado: " + hash.search(42));
         
         assert hash.search(42).equals("valorAtualizado");
-        System.out.println("✓ Atualização bem-sucedida");
+        System.out.println("Atualização bem-sucedida");
     }
     
     /**
@@ -231,7 +231,7 @@ public class TestesHash {
             hash.insert(chave, "valor" + chave);
         }
         
-        System.out.println("✓ 50 chaves inseridas");
+        System.out.println("50 chaves inseridas");
         System.out.println("  Profundidade Global: " + hash.getGlobalDepth());
         System.out.println("  Número de Buckets: " + hash.getNumberOfBuckets());
         
@@ -244,7 +244,7 @@ public class TestesHash {
         }
         
         assert contador == 50 : "Nem todas as chaves foram encontradas!";
-        System.out.println("✓ Todas as 50 chaves encontradas");
+        System.out.println("Todas as 50 chaves encontradas");
         
         // Remove algumas chaves
         System.out.println("\nRemovendo 10 chaves aleatórias...");
@@ -254,14 +254,14 @@ public class TestesHash {
             hash.remove(chave);
         }
         
-        System.out.println("✓ 10 chaves removidas");
+        System.out.println("10 chaves removidas");
         System.out.println("  Profundidade após remoções: " + hash.getGlobalDepth());
         
         // Verifica que foram removidas
         for (int chave : remover) {
             assert hash.search(chave) == null;
         }
-        System.out.println("✓ Chaves removidas não encontradas");
+        System.out.println("Chaves removidas não encontradas");
         
         // Verifica que as outras permanecem
         contador = 0;
@@ -279,7 +279,7 @@ public class TestesHash {
         }
         
         assert contador == 40;
-        System.out.println("✓ 40 chaves restantes encontradas");
+        System.out.println("40 chaves restantes encontradas");
         
         hash.display();
     }
