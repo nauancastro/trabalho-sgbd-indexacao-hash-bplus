@@ -7,7 +7,7 @@ import java.util.List;
  * Nó interno da Árvore B+
  */
 public class InternalNode extends Node {
-    List<Node> children;  // Agora package-private para LeafNode acessar
+    List<Node> children;
     private int maxKeys;
 
     public InternalNode(int maxKeys) {
@@ -17,9 +17,15 @@ public class InternalNode extends Node {
     }
 
     private int findChildPosition(int key) {
-        int pos = 0;
-        while (pos < keys.size() && key >= keys.get(pos)) {
-            pos++;
+        for (int i = 0; i < keys.size(); i++) {
+            if (key < keys.get(i)) {
+                return i;
+            }
+        }
+        // Retorna o último filho, mas garante que não exceda o limite
+        int pos = keys.size();
+        if (pos >= children.size()) {
+            pos = children.size() - 1;
         }
         return pos;
     }
@@ -27,33 +33,24 @@ public class InternalNode extends Node {
     @Override
     public Node insert(int key, String value) {
         int pos = findChildPosition(key);
-        
-        // Proteção contra índice fora do limite
-        if (pos >= children.size()) {
-            pos = children.size() - 1;
-        }
-        
         Node child = children.get(pos);
         Node newChild = child.insert(key, value);
 
         if (newChild == null) {
-            return null;  // Sem split no filho
+            return null; // Sem split
         }
 
-        // Houve split no filho
-        if (newChild instanceof InternalNode) {
-            InternalNode splitNode = (InternalNode) newChild;
-            int newKey = splitNode.keys.get(0);
-            Node leftChild = splitNode.children.get(0);
-            Node rightChild = splitNode.children.get(1);
-            
-            // Insere a nova chave e ajusta os filhos
-            keys.add(pos, newKey);
-            children.set(pos, leftChild);
-            children.add(pos + 1, rightChild);
-        }
+        InternalNode splitResult = (InternalNode) newChild;
+        int promotedKey = splitResult.keys.get(0);
+        Node leftChild = splitResult.children.get(0);
+        Node rightChild = splitResult.children.get(1);
 
-        // Verifica se este nó precisa fazer split
+        // Insere a chave promovida na posição correta
+        keys.add(pos, promotedKey);
+        children.set(pos, leftChild);
+        children.add(pos + 1, rightChild);
+
+        // Verifica se este nó precisa split
         if (keys.size() <= maxKeys) {
             return null;
         }
@@ -64,13 +61,26 @@ public class InternalNode extends Node {
     private Node split() {
         int mid = (keys.size() + 1) / 2;
         
+        // Cria novo nó interno com a metade direita
         InternalNode newInternal = new InternalNode(maxKeys);
-        newInternal.keys.addAll(keys.subList(mid, keys.size()));
-        newInternal.children.addAll(children.subList(mid, children.size()));
         
-        keys.subList(mid, keys.size()).clear();
-        children.subList(mid, children.size()).clear();
+        // Move metade das chaves e filhos para o novo nó
+        for (int i = mid; i < keys.size(); i++) {
+            newInternal.keys.add(keys.get(i));
+        }
+        for (int i = mid; i < children.size(); i++) {
+            newInternal.children.add(children.get(i));
+        }
+        
+        // Remove as chaves e filhos movidos
+        for (int i = keys.size() - 1; i >= mid; i--) {
+            keys.remove(i);
+        }
+        for (int i = children.size() - 1; i >= mid; i--) {
+            children.remove(i);
+        }
 
+        // Cria nó temporário para retornar (será a nova raiz)
         InternalNode newRoot = new InternalNode(maxKeys);
         newRoot.keys.add(newInternal.keys.get(0));
         newRoot.children.add(this);
@@ -82,8 +92,12 @@ public class InternalNode extends Node {
     @Override
     public String search(int key) {
         int pos = findChildPosition(key);
+        // Proteção extra de segurança
         if (pos >= children.size()) {
             pos = children.size() - 1;
+        }
+        if (pos < 0 || children.isEmpty()) {
+            return null;
         }
         return children.get(pos).search(key);
     }
@@ -91,8 +105,12 @@ public class InternalNode extends Node {
     @Override
     public boolean delete(int key) {
         int pos = findChildPosition(key);
+        // Proteção extra de segurança
         if (pos >= children.size()) {
             pos = children.size() - 1;
+        }
+        if (pos < 0 || children.isEmpty()) {
+            return false;
         }
         return children.get(pos).delete(key);
     }
@@ -108,6 +126,7 @@ public class InternalNode extends Node {
 
     @Override
     public int getHeight() {
+        if (children.isEmpty()) return 1;
         return 1 + children.get(0).getHeight();
     }
 

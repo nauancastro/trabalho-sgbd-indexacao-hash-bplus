@@ -55,16 +55,26 @@ public class LeafNode extends Node {
     private Node split() {
         int mid = (keys.size() + 1) / 2;
         
+        // Cria nova folha
         LeafNode newLeaf = new LeafNode(maxKeys);
-        newLeaf.keys.addAll(keys.subList(mid, keys.size()));
-        newLeaf.values.addAll(values.subList(mid, values.size()));
         
-        keys.subList(mid, keys.size()).clear();
-        values.subList(mid, values.size()).clear();
+        // Move metade para a nova folha
+        for (int i = mid; i < keys.size(); i++) {
+            newLeaf.keys.add(keys.get(i));
+            newLeaf.values.add(values.get(i));
+        }
         
+        // Remove elementos movidos
+        for (int i = keys.size() - 1; i >= mid; i--) {
+            keys.remove(i);
+            values.remove(i);
+        }
+        
+        // Ajusta ponteiros
         newLeaf.next = this.next;
         this.next = newLeaf;
 
+        // Cria nó temporário para promover a primeira chave da nova folha
         InternalNode newRoot = new InternalNode(maxKeys);
         newRoot.keys.add(newLeaf.keys.get(0));
         newRoot.children.add(this);
