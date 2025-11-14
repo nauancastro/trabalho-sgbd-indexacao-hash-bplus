@@ -21,7 +21,6 @@ public class Main {
             System.out.println("1. Demonstração Automática");
             System.out.println("2. Modo Interativo");
             System.out.println("3. Teste com Dados Aleatórios");
-            System.out.println("4. Executar Suite de Testes");
             System.out.println("0. Sair");
             System.out.print("\nEscolha uma opção: ");
             
@@ -42,9 +41,6 @@ public class Main {
                     break;
                 case 3:
                     testeAleatorio(scanner);
-                    break;
-                case 4:
-                    BPlusTreeTest.main(new String[]{});
                     break;
                 case 0:
                     System.out.println("\nEncerrando o programa...");
